@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Karyawan</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Form Input Data Karyawan</h1>
+  
+  <form id="formInput">
+    <input type="text" id="no" placeholder="NO" required><br>
+    <input type="text" id="name" placeholder="Nama" required><br>
+    <input type="text" id="nip" placeholder="NIP" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="tel" id="telepon" placeholder="Telepon" required><br>
+    <input type="date" id="tanggalLahir" required><br>
+    <input type="text" id="jenisKelamin" placeholder="Jenis Kelamin" required><br>
+    <input type="date" id="tanggalBergabung" required><br>
+    <input type="text" id="statusNikah" placeholder="Status Nikah" required><br>
+    <input type="text" id="alamat" placeholder="Alamat" required><br>
+    <input type="text" id="jabatan" placeholder="Jabatan" required><br>
+    <input type="text" id="groupLokasi" placeholder="Group Lokasi" required><br>
+    <input type="text" id="nik" placeholder="NIK" required><br>
+    <input type="text" id="noKK" placeholder="NO.KK" required><br>
+    <input type="text" id="profesi" placeholder="PROFESI" required><br>
+    <button type="submit">Tambah Karyawan</button>
+  </form>
+
+  <h2>Data Karyawan</h2>
+  <ul id="karyawanList"></ul>
+
+  <h2>Hapus Data Karyawan</h2>
+  <input type="text" id="noHapus" placeholder="NO Karyawan yang akan dihapus">
+  <button onclick="hapusData()">Hapus Karyawan</button>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyXr6LEWX1WtHhBcTd393_DPVm6k7jNCIZEW2Gx08_UiNQ6hHr3_YNGOUD8LKLbyIAe/exec"; // Ganti dengan URL Web App yang kamu dapat dari Google Apps Script
+
+    document.getElementById('formInput').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const data = {
+        no: document.getElementById('no').value,
+        name: document.getElementById('name').value,
+        nip: document.getElementById('nip').value,
+        email: document.getElementById('email').value,
+        telepon: document.getElementById('telepon').value,
+        tanggalLahir: document.getElementById('tanggalLahir').value,
+        jenisKelamin: document.getElementById('jenisKelamin').value,
+        tanggalBergabung: document.getElementById('tanggalBergabung').value,
+        statusNikah: document.getElementById('statusNikah').value,
+        alamat: document.getElementById('alamat').value,
+        jabatan: document.getElementById('jabatan').value,
+        groupLokasi: document.getElementById('groupLokasi').value,
+        nik: document.getElementById('nik').value,
+        noKK: document.getElementById('noKK').value,
+        profesi: document.getElementById('profesi').value
+      };
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(text => alert(text));
+    });
+
+    function loadData() {
+      fetch(API_URL)
+        .then(response => response.json())
+        .then(data => {
+          const list = document.getElementById('karyawanList');
+          list.innerHTML = '';
+          data.forEach(karyawan => {
+            const li = document.createElement('li');
+            li.textContent = `${karyawan.name} - ${karyawan.jabatan}`;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    loadData();
+
+    function hapusData() {
+      const noHapus = document.getElementById('noHapus').value;
+      
+      const data = {
+        no: noHapus
+      };
+
+      fetch(API_URL, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(text => alert(text));
+    }
+  </script>
+</body>
+</html>
